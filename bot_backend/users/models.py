@@ -26,7 +26,7 @@ class CustomerProfile(models.Model):
     user = models.OneToOneField(User, limit_choices_to={"role":"Customer"}, on_delete=models.CASCADE)
     points = models.BigIntegerField(default=0)
     phone_number = models.CharField(max_length=20, editable=True, unique=True)
-    chat_id = models.IntegerField(blank=True,editable=True)
+    chat_id = models.IntegerField(null=True, blank=True,editable=True)
 
     address = models.CharField(max_length=300, blank=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True)
