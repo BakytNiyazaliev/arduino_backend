@@ -47,7 +47,7 @@ def session_post(request, rfid, points):
         return Http404
     customer = CustomerProfile.objects.get(user=user)
     object = Session(customer=customer, points=points)
-    serializer = SessionSerializer(data=object)
+    serializer = SessionSerializer(object)
     if serializer.is_valid():
         object.save()
         return JsonResponse(serializer.data)
