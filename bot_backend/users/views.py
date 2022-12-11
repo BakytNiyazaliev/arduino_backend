@@ -1,6 +1,7 @@
 # from django.shortcuts import render
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.parsers import JSONParser
+from rest_framework.exceptions import ValidationError
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
@@ -27,6 +28,17 @@ def get_customer(request, phone_number):
     raise HttpResponseBadRequest
 
 
+@require_POST
+@csrf_exempt
+def session_post(request, chat_id):
+    data = JSONParser().parse(request)
+    data['customer'] = get_object_or_404(CustomerProfile, chat_id=chat_id)
+    object = Session(customer=data['customer'], points=data['points'])
+    serializer = SessionSerializer(data=data)
+    if serializer.is_valid():
+        object.save()
+        return JsonResponse(serializer.data)
+    raise ValidationError
 
 @require_GET
 @csrf_exempt
