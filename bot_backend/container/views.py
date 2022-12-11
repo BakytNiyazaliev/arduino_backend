@@ -43,7 +43,7 @@ def report_post(request):
 @csrf_exempt
 def session_post(request, rfid, points):
     user = get_object_or_404(User, rfid=rfid)
-    if user in User.objects.filter(role="Customer"):
+    if user not in User.objects.filter(role="Customer"):
         return Http404
     customer = CustomerProfile.objects.get(user=user)
     object = Session(customer=customer, points=points)
