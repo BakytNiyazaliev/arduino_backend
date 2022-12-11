@@ -44,7 +44,7 @@ def report_post(request):
 def session_post(request, rfid, points):
     user = get_object_or_404(User, rfid=rfid)
     if user in User.objects.filter(role="Customer"):
-        return 
+        return Http404
     customer = CustomerProfile.objects.get(user=user)
     object = Session(customer=customer, points=points)
     serializer = SessionSerializer(data=object)
