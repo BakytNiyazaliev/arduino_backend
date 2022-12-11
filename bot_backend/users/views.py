@@ -61,7 +61,7 @@ def get_user(request, rfid):
 @require_POST
 @csrf_exempt
 def login(request):
-    data = JSONParser().parse(request)
+    data = JSONParser().parse(request.POST)
     user = get_object_or_404(User, username=data['username'], password=data['password'])
     return JsonResponse(UserSerializer(user).data)
 
