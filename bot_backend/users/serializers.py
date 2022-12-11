@@ -11,7 +11,7 @@ class CustomerSerializer(serializers.ModelSerializer):
     user = UserSerializer()
     class Meta:
         model = CustomerProfile
-        fields = ["user", "points", "phone_number"]
+        fields = ["user", "points", "phone_number", "chat_id"]
 
 class SessionSerializer(serializers.ModelSerializer):
     class Meta:

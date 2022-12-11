@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework.parsers import JSONParser
 from rest_framework.generics import ListAPIView, UpdateAPIView, ListCreateAPIView
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import AllowAny
 
 from .serializers import ContainerSerializer
 from .models import Container
@@ -25,6 +24,7 @@ class UpdateContainer(UpdateAPIView):
     serializer_class = ContainerSerializer
 
 
+@require_POST
 @csrf_exempt
 def session_post(request):
     data = JSONParser().parse(request)
