@@ -24,14 +24,14 @@ class UpdateContainer(UpdateAPIView):
     serializer_class = ContainerSerializer
 
 
-@require_POST
-def report_post(request):
-    data = JSONParser().parse(request)
-    container = get_object_or_404(Container, id=data['container'])
-    is_active = True
-    for value in data.values()[1:]:
-        if value == False:
-            is_active = False
+# @require_POST
+# def report_post(request):
+#     data = JSONParser().parse(request)
+#     container = get_object_or_404(Container, id=data['container'])
+#     is_active = True
+#     for value in data.values()[1:]:
+#         if value == False:
+#             is_active = False
     
 
 
