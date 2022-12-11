@@ -28,6 +28,7 @@ def get_customer(request, phone_number):
     raise HttpResponseBadRequest
 
 
+
 @require_POST
 @csrf_exempt
 def session_post(request, chat_id):
