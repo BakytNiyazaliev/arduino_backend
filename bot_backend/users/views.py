@@ -4,8 +4,9 @@ from rest_framework.parsers import JSONParser
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST, require_GET
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import get_object_or_404
+
 
 from .models import CustomerProfile, Session, User
 from .serializers import CustomerSerializer, SessionSerializer, UserSerializer
@@ -14,16 +15,19 @@ class CustomersList(ListAPIView):
     queryset = CustomerProfile.objects.all()
     serializer_class = CustomerSerializer
 
-
+@csrf_exempt
 def get_customer(request, phone_number):
     if request.method == 'PUT':
         data = JSONParser().parse(request)
-        object = get_object_or_404(CustomerProfile, phone_number=phone_number)
-        serializer = CustomerSerializer(data=data)
-        serializer.update
-    return JsonResponse(serializer.data)
+        customer = CustomerProfile.objects.filter(phone_number=phone_number).update(chat_id=data['chat_id'])
+        customer = get_object_or_404(CustomerProfile, phone_number=phone_number)
+        serializer = CustomerSerializer(customer)
+        return JsonResponse(serializer.data)
+    raise HttpResponseBadRequest
 
 
+
+@require_GET
 def get_customer_by_chat_id(request, chat_id):
     object = get_object_or_404(CustomerProfile, chat_id=chat_id)
     serializer = CustomerSerializer(object)
