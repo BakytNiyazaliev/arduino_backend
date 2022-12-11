@@ -31,6 +31,7 @@ def get_customer_by_chat_id(request, chat_id):
 
 
 @require_GET
+@csrf_exempt
 def get_user(request, rfid):
     object = get_object_or_404(User, rfid=rfid)
     serializer = UserSerializer(object)
@@ -45,8 +46,8 @@ def login(request):
     user = get_object_or_404(User, username=data['username'], password=data['password'])
     return JsonResponse(UserSerializer(user).data)
 
-def get_history(request, phone_number):
-    customer = get_object_or_404(CustomerProfile, phone_number=phone_number)
+def get_history(request, chat_id):
+    customer = get_object_or_404(CustomerProfile, chat_id=chat_id)
     queryset = Session.objects.filter(customer=customer).order_by('-id')[:10]
     serializer = SessionSerializer(queryset, many=True)
     return JsonResponse(serializer.data, safe=False)
