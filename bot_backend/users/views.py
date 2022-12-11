@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from .models import CustomerProfile, Session, User
 from .serializers import CustomerSerializer, SessionSerializer, UserSerializer
 
+
 class CustomersList(ListAPIView):
     queryset = CustomerProfile.objects.all()
     serializer_class = CustomerSerializer
@@ -28,6 +29,7 @@ def get_customer(request, phone_number):
 
 
 @require_GET
+@csrf_exempt
 def get_customer_by_chat_id(request, chat_id):
     object = get_object_or_404(CustomerProfile, chat_id=chat_id)
     serializer = CustomerSerializer(object)
@@ -50,6 +52,8 @@ def login(request):
     user = get_object_or_404(User, username=data['username'], password=data['password'])
     return JsonResponse(UserSerializer(user).data)
 
+@require_GET
+@csrf_exempt
 def get_history(request, chat_id):
     customer = get_object_or_404(CustomerProfile, chat_id=chat_id)
     queryset = Session.objects.filter(customer=customer).order_by('-id')[:10]
