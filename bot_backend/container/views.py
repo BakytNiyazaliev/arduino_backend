@@ -1,4 +1,4 @@
-from django.views.decorators.http import require_POST 
+from django.views.decorators.http import require_POST, require_GET
 from django.views.decorators.csrf import csrf_exempt
 from django.http.response import JsonResponse, Http404
 from django.shortcuts import get_object_or_404
@@ -39,16 +39,15 @@ def report_post(request):
     
 
 
-@require_POST
+@require_GET
 @csrf_exempt
-def session_post(request):
-    data = JSONParser().parse(request)
-    user = get_object_or_404(User, rfid=data['rfid'])
+def session_post(request, rfid, points):
+    user = get_object_or_404(User, rfid=rfid)
     if user in User.objects.fiter(role="Customer"):
         return 
-    data['customer'] = CustomerProfile.objects.get(user=user)
-    object = Session(customer=data['customer'], points=data['points'])
-    serializer = SessionSerializer(data=data)
+    customer = CustomerProfile.objects.get(user=user)
+    object = Session(customer=customer, points=points)
+    serializer = SessionSerializer(data=object)
     if serializer.is_valid():
         object.save()
         return JsonResponse(serializer.data)
